@@ -2,12 +2,20 @@ from pipou import parse
 import random
 
 (tab, n, m) = parse()
+
+
+GRAND_NOMBRE = 1000
+
+
 # tab is an array of array st tab[i] is the list of lights for switch i
 # n is the number of lights
 # m is the number of switches
-GRAND_NOMBRE = 1000
 
-output = open("output_greedy.txt", "r")
+
+#output = open("output_greedy.txt", "r")
+#output = open("output_quadrup.txt", "r")
+output = open("output_mauvais.txt", "r")
+
 output = output.read()
 
 output = list(map(int, output.split('\n')[:-1]))
@@ -42,16 +50,21 @@ def amelioration(liste_a_changer, m, n, output):
 
     def aux(liste_a_changer, maxi, interrupteurs):
         if liste_a_changer == []:
-            return maxi, interrupteurs
+            return nombre_lampes_allumees(tab, n, list_output(interrupteurs)), interrupteurs
 
         else:
+            maxiS, interrupteursS = aux(liste_a_changer[1:], maxi, interrupteurs)
             interrupteurs[liste_a_changer[0]] = not interrupteurs[liste_a_changer[0]]
-            maxi = max(maxi, nombre_lampes_allumees(tab, n, list_output(interrupteurs)))
             maxiN, interrupteursN = aux(liste_a_changer[1:], maxi, interrupteurs)
+
+            if maxiS > maxi:
+                maxi = maxiS
+                interrupteurs = interrupteursS[:]
+                interrupteurs[liste_a_changer[0]] = not interrupteurs[liste_a_changer[0]]
 
             if maxiN > maxi:
                 maxi = maxiN
-                interrupteurs = interrupteursN
+                interrupteurs = interrupteursN[:]
 
             else:
                 interrupteurs[liste_a_changer[0]] = not interrupteurs[liste_a_changer[0]]
@@ -75,4 +88,4 @@ def k_amelioration(k, m, n, output):
 
     return output
 
-print(k_amelioration(10, m, n, output))
+print(k_amelioration(1, m, n, output))
