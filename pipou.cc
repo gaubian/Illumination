@@ -57,5 +57,6 @@ int main() {
     int n = get<1>(t), m = get<2>(t);
     VB lights(n, false), switches(m, false);
     int ans = 0, best_ans = 0;
-    test(G, lights, switches, best_ans, ans, n, m, 0, 4);
+    //test(G, lights, switches, best_ans, ans, n, m, 0, 4);
+    VI partial_solution = {1, 53, 118, 187};
 }

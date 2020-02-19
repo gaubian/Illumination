@@ -46,7 +46,7 @@ def analysis(G, n, m):
             revG[j].append(i)
     print(sorted([len(tab) for tab in revG]))
 
-(G, n, m) = parse()
-analysis(G, n, m)
+#(G, n, m) = parse()
+#analysis(G, n, m)
 #sol = greedy(G, n, m)
 #output_sol(sol)
