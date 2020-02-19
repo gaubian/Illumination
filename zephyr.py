@@ -13,7 +13,7 @@ GRAND_NOMBRE = 1000
 
 
 #output = open("output_greedy.txt", "r")
-#output = open("output_quadrup.txt", "r")
+#output = open("output_quatrup.txt", "r")
 output = open("output_mauvais.txt", "r")
 
 output = output.read()
@@ -31,6 +31,7 @@ def nombre_lampes_allumees(tab, n, output):
 
 
 #print(nombre_lampes_allumees(tab, n, output))
+
 def list_output(interrupteurs):
     return [i for i in range(m) if interrupteurs[i]]
 
@@ -48,44 +49,44 @@ def amelioration(liste_a_changer, m, n, output):
     et sélectionne la meilleure'''  
     interrupteurs = list_interrupteurs(output)
 
-    def aux(liste_a_changer, maxi, interrupteurs):
+    def aux(liste_a_changer, interrupteurs):
         if liste_a_changer == []:
-            return nombre_lampes_allumees(tab, n, list_output(interrupteurs)), interrupteurs
+            return interrupteurs
 
         else:
-            maxiS, interrupteursS = aux(liste_a_changer[1:], maxi, interrupteurs)
+            interrupteursS = aux(liste_a_changer[1:], interrupteurs)
+            maxiS = nombre_lampes_allumees(tab, n, list_output(interrupteursS))
+
             interrupteurs[liste_a_changer[0]] = not interrupteurs[liste_a_changer[0]]
-            maxiN, interrupteursN = aux(liste_a_changer[1:], maxi, interrupteurs)
+            interrupteursN = aux(liste_a_changer[1:], interrupteurs)
+            maxiN = nombre_lampes_allumees(tab, n, list_output(interrupteursN))
 
-            if maxiS > maxi:
-                maxi = maxiS
+            if maxiS > maxiN:
                 interrupteurs = interrupteursS[:]
-                interrupteurs[liste_a_changer[0]] = not interrupteurs[liste_a_changer[0]]
-
-            if maxiN > maxi:
-                maxi = maxiN
-                interrupteurs = interrupteursN[:]
 
             else:
-                interrupteurs[liste_a_changer[0]] = not interrupteurs[liste_a_changer[0]]
+                interrupteurs = interrupteursN[:]
 
-            return maxi, interrupteurs
+            return interrupteurs
 
-    return aux(liste_a_changer, nombre_lampes_allumees(tab, n, output), interrupteurs)
+    return aux(liste_a_changer, interrupteurs)
 
 
 def k_amelioration(k, m, n, output):
     nombre_lampes = nombre_lampes_allumees(tab, n, output)
 
     for i in range(GRAND_NOMBRE):
-        liste_a_changer = random.sample(list(range(m)), k)
+        liste_a_changer = random.sample(list(range(m)), k-1) + random.sample(output, 1)
 
-        maxi, interrupteurs = amelioration(liste_a_changer, m, n, output)
+        interrupteurs = amelioration(liste_a_changer, m, n, output)
         
+        maxi = nombre_lampes_allumees(tab, n, list_output(interrupteurs))
         if maxi > nombre_lampes:
             nombre_lampes = maxi
             output = list_output(interrupteurs)
 
     return output
 
-print(k_amelioration(1, m, n, output))
+liste = k_amelioration(4, m, n, output)
+print(liste, nombre_lampes_allumees(tab, n, liste))
+#print(nombre_lampes_allumees(tab, n, [11, 164, 181, 187, 294]))
